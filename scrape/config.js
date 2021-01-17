@@ -2,7 +2,8 @@ const url = {
     login: 'http://authserver.cidp.edu.cn/authserver/login?service=http%3a%2f%2fjw.cidp.edu.cn%2fLoginHandler.ashx',
     jw_index: 'jw.cidp.edu.cn',
     mygrade: 'https://jw.cidp.edu.cn/Teacher/MarkManagement/StudentAverageMarkSearchFZ.aspx',
-    get_captcha: 'http://authserver.cidp.edu.cn/authserver/needCaptcha.html'
+    get_captcha: 'http://authserver.cidp.edu.cn/authserver/needCaptcha.html',
+    info: 'https://jw.cidp.edu.cn/RegisterInfo/RegisterManageHandler.ashx?action=getInfo'
 }
 const puppeteer_config = {
     launch: {
