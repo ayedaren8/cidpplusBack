@@ -1,6 +1,6 @@
 const Koa = require('koa')
 const app = new Koa()
-const bodyParser = require("koa-bodyParser");
+const bodyParser = require("koa-bodyparser");
 const router = require("koa-router")();
 const newBrowser = require('./scrape/browser.js');
 const log = require('./scrape/log')
