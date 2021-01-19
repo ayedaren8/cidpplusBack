@@ -1,13 +1,16 @@
+const semId = 61 //学期编号
 const url = {
     login: 'http://authserver.cidp.edu.cn/authserver/login?service=http%3a%2f%2fjw.cidp.edu.cn%2fLoginHandler.ashx',
     jw_index: 'jw.cidp.edu.cn',
     mygrade: 'https://jw.cidp.edu.cn/Teacher/MarkManagement/StudentAverageMarkSearchFZ.aspx',
     get_captcha: 'http://authserver.cidp.edu.cn/authserver/needCaptcha.html',
-    info: 'https://jw.cidp.edu.cn/RegisterInfo/RegisterManageHandler.ashx?action=getInfo'
+    info: 'https://jw.cidp.edu.cn/RegisterInfo/RegisterManageHandler.ashx?action=getInfo',
+    course: `https://jw.cidp.edu.cn/Teacher/TimeTableHandler.ashx?action=getTeacherTimeTable&&isShowStudent=1&&semId=${semId}&&testTeacherTimeTablePublishStatus=1`,
+    exam: `https://jw.cidp.edu.cn/Student/StudentExamArrangeTableHandler.ashx?semId=${semId}`
 }
 const puppeteer_config = {
     launch: {
-        headless: true,
+        headless: false,
         args: [
             '--no-sandbox', // 沙盒模式
             '--disable-setuid-sandbox', // uid沙盒
