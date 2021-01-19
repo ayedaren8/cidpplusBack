@@ -1,5 +1,3 @@
-**/node_modules
-**/.vscode
-**/log
-**/cookies
-middlewares/**
+middlewares
+node_modules
+scrape
