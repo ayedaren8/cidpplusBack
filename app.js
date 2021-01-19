@@ -23,6 +23,7 @@ for (let index = 0; index < MAX_SIZE; index++) {
         }
     })()
 }
+
 app.use(catchError())
 app.use(bodyParser())
 router.post('/api/info', async (ctx, next) => {
@@ -51,7 +52,6 @@ app.use(async (ctx, next) => {
 })
 
 app.use(router.routes(), router.allowedMethods())
-
 
 app.listen(3000, () => {
     console.log('[demo] request get is starting at http://127.0.0.1:3000')
