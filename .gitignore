@@ -2,3 +2,6 @@
 **/.vscode
 **/log
 **/cookies
+.DS_Store
+gulpfile.js
+*.lock
