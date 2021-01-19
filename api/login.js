@@ -1,14 +1,17 @@
 const {
     url
-} = require("./config");
-const scrape = require('./index')
+} = require("../scrape/config");
+const scrape = require('../scrape/index')
+const {
+    resHandler
+} = require("../util/util");
 let login = async (ws, user) => {
     let page = await scrape(ws, user)
     try {
         await page.goto(url.info)
         let res = await page.$('pre')
         res = await page.evaluate(Node => Node.innerText, res)
-        return res
+        return await resHandler(JSON.parse(res))
     } catch (error) {
         console.log('出现未知错误');
         console.log(error);

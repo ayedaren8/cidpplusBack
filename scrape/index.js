@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer')
 const http = require('http')
 const fs = require('fs');
-const log = require('./log')
+const log = require('../util/log')
 const {
     url,
     puppeteer_config

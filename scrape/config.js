@@ -16,7 +16,7 @@ const puppeteer_config = {
             '--disable-gpu', // GPU硬件加速
             '--no-zygote'
         ],
-        executablePath: '/usr/bin/chromium-browser'
+        executablePath: process.env.NODE_ENV === 'production' ? '/usr/bin/chromium-browser' : undefined
     },
     disableFile: ['image', 'stylesheet']
 }

@@ -1,6 +1,6 @@
 const fs = require("fs");
 module.exports = function log(content, id) {
-    let text = new Date() + "--" + content + '\n'
+    let text = new Date() + "[log]--" + content + '\n'
     let filename = id || 'log'
     console.log(text);
     if (!fs.existsSync(`${__dirname}/log/`)) {

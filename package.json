@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "yarn install || npm install &&node app.js"
+    "start": "yarn install || npm install &&node app.js",
+    "dev": "NODE_ENV=development node app.js",
+    "prod": "NODE_ENV=production  node app.js"
   },
   "dependencies": {
     "koa": "^2.13.1",
