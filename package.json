@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "yarn install || npm install &&node app.js"
+  },
   "dependencies": {
     "koa": "^2.13.1",
     "koa-bodyparser": "3",
