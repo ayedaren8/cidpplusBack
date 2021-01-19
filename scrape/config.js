@@ -1,4 +1,4 @@
-const semId = 61 //学期编号
+const semId = 64 //学期编号
 const url = {
     login: 'http://authserver.cidp.edu.cn/authserver/login?service=http%3a%2f%2fjw.cidp.edu.cn%2fLoginHandler.ashx',
     jw_index: 'jw.cidp.edu.cn',
@@ -10,7 +10,7 @@ const url = {
 }
 const puppeteer_config = {
     launch: {
-        headless: false,
+        headless: true,
         args: [
             '--no-sandbox', // 沙盒模式
             '--disable-setuid-sandbox', // uid沙盒
