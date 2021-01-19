@@ -7,7 +7,7 @@ const url = {
 }
 const puppeteer_config = {
     launch: {
-        headless: false,
+        headless: true,
         args: [
             '--no-sandbox', // 沙盒模式
             '--disable-setuid-sandbox', // uid沙盒
