@@ -8,7 +8,7 @@ const login = require('./scrape/login')
 const grade = require('./scrape/grade');
 const catchError = require('./middlewares/catchError')
 const cpus = require('os').cpus()
-let MAX_SIZE = 2
+let MAX_SIZE = cpus.length
 let browserList = []
 for (let index = 0; index < MAX_SIZE; index++) {
     (async () => {
@@ -23,7 +23,6 @@ for (let index = 0; index < MAX_SIZE; index++) {
         }
     })()
 }
-
 app.use(catchError())
 app.use(bodyParser())
 router.post('/api/info', async (ctx, next) => {

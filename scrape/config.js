@@ -15,7 +15,8 @@ const puppeteer_config = {
             '--disable-accelerated-2d-canvas', // canvas渲染
             '--disable-gpu', // GPU硬件加速
             '--no-zygote'
-        ]
+        ],
+        executablePath: '/usr/bin/chromium-browser'
     },
     disableFile: ['image', 'stylesheet']
 }
