@@ -28,7 +28,7 @@ module.exports = {
     production: {
       user: 'ubuntu',
       host: '123.206.73.100',
-      ref: 'origin/master',
+      ref: 'origin/main',
       repo: 'git@github.com:ayedaren8/cidpplusBack.git',
       path: '/app/cidpplus',
       'post-deploy': 'yarn install && pm2 reload ecosystem.config.js --env production',
