@@ -19,7 +19,7 @@ let grade = async (ws, user) => {
             year.List.forEach((sem) => {
                 sem.gradeList = []
                 chengji.forEach((les) => {
-                    console.log(sem.SemesterId);
+                    // console.log(sem.SemesterId);
                     if (sem.SemesterId == les.SemesterID) {
                         sem.gradeList.push(les)
                     }

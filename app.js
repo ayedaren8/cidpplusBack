@@ -29,9 +29,9 @@ app.use(catchError())
 app.use(bodyParser())
 
 router.post('/api/info', async (ctx, next) => {
-    console.log(2);
+    // console.log(2);
     await next()
-    console.log(3);
+    // console.log(3);
     let user = {
         username: ctx.request.body.username,
         password: ctx.request.body.password
@@ -41,9 +41,7 @@ router.post('/api/info', async (ctx, next) => {
 })
 
 router.post('/api/course', async (ctx, next) => {
-    console.log(2);
     await next()
-    console.log(3);
     let user = {
         username: ctx.request.body.username,
         password: ctx.request.body.password
@@ -53,9 +51,7 @@ router.post('/api/course', async (ctx, next) => {
 })
 
 router.post('/api/exam', async (ctx, next) => {
-    console.log(2);
     await next()
-    console.log(3);
     let user = {
         username: ctx.request.body.username,
         password: ctx.request.body.password
@@ -75,7 +71,7 @@ router.post('/api/grade', async (ctx, next) => {
 })
 app.use(async (ctx, next) => {
     await next()
-    console.log(`${ctx.URL} 返回——>>>${JSON.stringify(ctx.response.body)}`); // 打印耗费时间
+    // console.log(`${ctx.URL} 返回——>>>${JSON.stringify(ctx.response.body)}`); // 打印耗费时间
 })
 app.use(router.routes(), router.allowedMethods())
 app.listen(3000, () => {
