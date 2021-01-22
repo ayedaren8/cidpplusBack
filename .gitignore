@@ -7,3 +7,4 @@ gulpfile.js
 *.lock
 app
 package-lock.json
+*.log
