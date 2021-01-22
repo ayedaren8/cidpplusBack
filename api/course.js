@@ -24,6 +24,5 @@ let course = async (ws, user) => {
     } finally {
         await page.close()
     }
-
 }
 module.exports = course
