@@ -11,7 +11,7 @@ let exam = async (ws, user) => {
         await page.goto(url.exam)
         let res = await page.$('pre')
         res = await page.evaluate(Node => Node.innerText, res)
-        return await resHandler(JSON.parse(res))
+        ctx.body = await resHandler(JSON.parse(res))
     } catch (error) {
         console.log('出现未知错误');
         console.log(error);

@@ -7,7 +7,11 @@ const {
 const scrape = require('../scrape/index')
 const log = require("../util/log");
 
-let grade = async (ws, user) => {
+let grade = async (ws, ctx) => {
+    let user = {
+        username: ctx.request.body.username,
+        password: ctx.request.body.password
+    }
     let page = await scrape(ws, user)
     try {
         await page.goto(url.mygrade)
@@ -19,7 +23,6 @@ let grade = async (ws, user) => {
             year.List.forEach((sem) => {
                 sem.gradeList = []
                 chengji.forEach((les) => {
-                    // console.log(sem.SemesterId);
                     if (sem.SemesterId == les.SemesterID) {
                         sem.gradeList.push(les)
                     }
@@ -27,7 +30,7 @@ let grade = async (ws, user) => {
 
             })
         })
-        return await resHandler(xueqi)
+        ctx.body = await resHandler(xueqi)
     } catch (error) {
         log(error, user.username)
         let err = new Error()

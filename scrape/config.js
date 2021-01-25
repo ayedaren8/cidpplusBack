@@ -10,7 +10,7 @@ const url = {
 }
 const puppeteer_config = {
     launch: {
-        headless: process.env.NODE_ENV === 'production' ? true : false,
+        headless: true,
         args: [
             '--no-sandbox', // 沙盒模式
             '--disable-setuid-sandbox', // uid沙盒
@@ -19,6 +19,7 @@ const puppeteer_config = {
             '--disable-gpu', // GPU硬件加速
             '--no-zygote'
         ],
+        ignoreHTTPSErrors: true,
         executablePath: process.env.NODE_ENV === 'production' ? '/usr/bin/chromium-browser' : undefined
     },
     disableFile: ['image', 'stylesheet']

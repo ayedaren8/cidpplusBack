@@ -29,49 +29,45 @@ app.use(catchError())
 app.use(bodyParser())
 
 router.post('/api/info', async (ctx, next) => {
-    // console.log(2);
     await next()
-    // console.log(3);
-    let user = {
-        username: ctx.request.body.username,
-        password: ctx.request.body.password
+    await login(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
+    if (ctx.request.body.username != ctx.body.data.srNum) {
+        console.log(`出现混乱`);
+        console.log(ctx.body);
     }
-    log(JSON.stringify(user) + ctx.request.path + '', 'user')
-    ctx.body = await login(browserList[Math.floor(Math.random() * MAX_SIZE)], user)
 })
 
 router.post('/api/course', async (ctx, next) => {
-    await next()
-    let user = {
-        username: ctx.request.body.username,
-        password: ctx.request.body.password
+
+    await login(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
+    if (ctx.request.body.username != ctx.body.data.srNum) {
+        console.log(`出现混乱`);
+        console.log(ctx.body);
     }
-    log(JSON.stringify(user) + ctx.request.path + '', 'user')
-    ctx.body = await course(browserList[Math.floor(Math.random() * MAX_SIZE)], user)
+    console.log(ctx.request.body.username + '$$$$' + ctx.body.data.srNum)
 })
 
 router.post('/api/exam', async (ctx, next) => {
-    await next()
-    let user = {
-        username: ctx.request.body.username,
-        password: ctx.request.body.password
+
+    await login(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
+    if (ctx.request.body.username != ctx.body.data.srNum) {
+        console.log(`出现混乱`);
+        console.log(ctx.body);
     }
-    log(JSON.stringify(user) + ctx.request.path + '', 'user')
-    ctx.body = await exam(browserList[Math.floor(Math.random() * MAX_SIZE)], user)
+    console.log(ctx.request.body.username + '$$$$' + ctx.body.data.srNum)
 })
 
 router.post('/api/grade', async (ctx, next) => {
-    await next()
-    let user = {
-        username: ctx.request.body.username,
-        password: ctx.request.body.password
+    await grade(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
+    if (ctx.request.body.username != ctx.body.data.srNum) {
+        console.log(`出现混乱`);
+        console.log(ctx.body);
     }
-    log(JSON.stringify(user) + ctx.request.path + '', 'user')
-    ctx.body = await grade(browserList[Math.floor(Math.random() * MAX_SIZE)], user)
+    console.log(ctx.request.body.username + '$$$$' + ctx.body.data.srNum)
 })
 app.use(async (ctx, next) => {
     await next()
-    // console.log(`${ctx.URL} 返回——>>>${JSON.stringify(ctx.response.body)}`); // 打印耗费时间
+    console.log(`${ctx.URL} 返回——>>>${JSON.stringify(ctx.response.body)}`); // 打印耗费时间
 })
 app.use(router.routes(), router.allowedMethods())
 app.listen(3000, () => {

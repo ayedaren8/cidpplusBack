@@ -5,10 +5,11 @@ const log = require('../util/log')
 const {
     url,
     puppeteer_config
-} = require('./config')
+} = require('./config');
 
 async function pageFactory(browser) {
-    let page = (await (await browser).newPage())
+    // browser = await browser.createIncognitoBrowserContext()
+    let page = await (await browser).newPage()
     await page.setRequestInterception(true);
     page.on('request', async (request) => {
         // 如果文件类型为image,则中断加载
@@ -18,17 +19,17 @@ async function pageFactory(browser) {
         }
         // 正常加载其他类型的文件
         request.continue();
-    });
-    return page
+    })
+    return await page
 }
 
-function isNeedCaptcha(user) {
-    log(`正在校验${user.username}是否需要验证码`, user.username);
+function isNeedCaptcha(username) {
+    log(`正在校验${username}是否需要验证码`, username);
     //校验验证码
     const options = {
         hostname: url.get_captcha,
         port: 80,
-        path: `?username=${user.username}&pwdEncrypt2=pwdEncryptSalt&_=${new Date().getTime()}`,
+        path: `?username=${username}&pwdEncrypt2=pwdEncryptSalt&_=${new Date().getTime()}`,
         method: 'GET'
     }
     return new Promise((resolve, reject) => {
@@ -40,87 +41,92 @@ function isNeedCaptcha(user) {
     })
 }
 
-async function makeCookies(page, user) {
-    if (await isNeedCaptcha(user).then(d => d) === 'true') {
+async function makeCookies(browser, user) {
+    if (await isNeedCaptcha(user.username).then(d => d) === 'true') {
         log('需要验证码，程序结束', user.username);
-        await page.close()
         let err = new Error()
         err.message = {
             code: 'user:needCaptcha',
-            desc: "需要验证码"
+            desc: "出现了验证码，机器暂时无法处理，请登陆http://ehall.cidp.edu.cn处理后重新登陆"
         }
         throw err
     } else {
         log('不需要验证码', user.username);
     }
+    let page = await pageFactory(browser)
     await page.goto(url.login);
-    await page.type('#username', user.username)
-    await page.type('#password', user.password)
-    await page.click('button')
+    log(`${JSON.stringify(user)}正在登陆`, 'test');
     try {
-        await page.waitForNavigation()
+        await page.$eval('#username', (input, user) => {
+            input.value = `${user.username}`;
+        }, user);
+        await page.$eval('#password', (input, user) => {
+            input.value = `${user.password}`
+        }, user);
+        const navigationPromise = page.waitForNavigation();
+        await page.$eval('button', a => a.click())
+        await navigationPromise;
     } catch (error) {
-        let err2 = new Error()
-        err2.message = {
-            code: 'server:NavigationTimeOut',
-            desc: "服务器跳转超时"
-        }
-        throw err2
-    }
-    let cookies = await page.cookies()
-    log('cookies-Domain：' + cookies[0]['domain'], user.username);
-    if (cookies[0]['domain'] === url.jw_index) {
-        fs.writeFileSync(`${__dirname}/cookies/${user.username}.json`, JSON.stringify(cookies))
-        log('登录成功', user.username);
-    } else {
-        log('用户名或密码错误', user.username);
-        console.log('用户名或密码错误', user.username);
-        page.close()
+        await page.close()
         let err = new Error()
         err.message = {
-            code: 'user:badPassword',
-            desc: "用户名或密码错误"
+            code: 'server:navigationTimeout',
+            desc: "导航超时"
         }
         throw err
     }
-    return page
-}
-
-async function isCookiesUseful(page, user) {
-    await page.goto(url.mygrade)
-    if (await page.title() === '无权限，请重试') {
-        log('cookies过期', user.username);
-        page = await makeCookies(page, user)
+    if (await page.title() === "教务管理系统") {
+        log('登录成功', user.username);
         return await page
     } else {
-        return await page
+        console.log();
+        if (await page.title() == "Unified Identity Authentication") {
+            log('用户名或密码错误', user.username);
+            console.log('用户名或密码错误', user.username);
+            await page.close()
+            let err = new Error()
+            err.message = {
+                code: 'user:badPassword',
+                desc: "用户名或密码错误"
+            }
+            throw err
+        } else {
+            console.log(await page.title());
+            await page.close()
+            let err = new Error()
+            err.message = {
+                code: 'sever:tooManyRequests',
+                desc: "当前服务器正忙,请稍后重试！"
+            }
+            throw err
+        }
+
     }
 }
 
-let scrape = async (ws, user) => {
-    let browser = puppeteer.connect({
+async function scrape(ws, user) {
+    if (ws == undefined) {
+        let err = new Error()
+        err.message = {
+            code: "server:missChromium",
+            desc: "浏览器实例缺失,如尝试多次无效后，请联系开发谢谢"
+        }
+        throw err
+    }
+    if (user.username === undefined || user.password === undefined) {
+        let err = new Error()
+        err.message = {
+            code: "user:missNessaryData",
+            desc: "缺少必要参数，需要重新登录"
+        }
+        throw err
+    }
+    let browser = await puppeteer.connect({
         browserWSEndpoint: ws
     })
-    let cookies = null
-    if (!fs.existsSync(`${__dirname}/cookies`)) {
-        fs.mkdirSync(`${__dirname}/cookies`)
-    }
-    let page = await pageFactory(browser)
-
-    if (!fs.existsSync(`${__dirname}/cookies/${user.username}.json`)) {
-        log('没有cookies', user.username);
-        page = await makeCookies(page, user)
-    } else {
-        log('使用cookies', user.username);
-        cookies = JSON.parse(fs.readFileSync(`${__dirname}/cookies/${user.username}.json`))
-        await page.setCookie(cookies[0])
-    }
-    if (!page) {
-        return
-    }
-    page = await isCookiesUseful(page, user)
+    browser = await browser.createIncognitoBrowserContext()
+    let page = await makeCookies(browser, user)
     return await page
 }
-
 
 module.exports = scrape
