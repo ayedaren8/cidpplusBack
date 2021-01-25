@@ -12,9 +12,15 @@ let grade = async (ws, ctx) => {
         username: ctx.request.body.username,
         password: ctx.request.body.password
     }
-    let page = await scrape(ws, user)
     try {
+        var page = await scrape(ws, user)
+    } catch (error) {
+        throw error
+    }
+    try {
+        const navigationPromise = page.waitForNavigation();
         await page.goto(url.mygrade)
+        await navigationPromise;
         let xueqi = await page.$('#hfSemesterFramework')
         let chengji = await page.$('#hfAverageMarkFromClass')
         xueqi = await page.evaluate(Node => JSON.parse(Node.value), xueqi)
@@ -36,11 +42,13 @@ let grade = async (ws, ctx) => {
         let err = new Error()
         err.message = {
             code: 'server:unknow',
-            desc: error.message
+            desc: error
         }
         throw err
     } finally {
-        await page.close()
+        if (page !== undefined) {
+            await page.close()
+        }
     }
 }
 module.exports = grade

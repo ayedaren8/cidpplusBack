@@ -10,7 +10,7 @@ const course = require('./api/course');
 const exam = require('./api/exam');
 const catchError = require('./middlewares/catchError')
 // const cpus = require('os').cpus()
-let MAX_SIZE = 1
+let MAX_SIZE = 2
 let browserList = []
 for (let index = 0; index < MAX_SIZE; index++) {
     (async () => {
@@ -27,47 +27,35 @@ for (let index = 0; index < MAX_SIZE; index++) {
 }
 app.use(catchError())
 app.use(bodyParser())
-
 router.post('/api/info', async (ctx, next) => {
     await next()
     await login(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
     if (ctx.request.body.username != ctx.body.data.srNum) {
         console.log(`出现混乱`);
         console.log(ctx.body);
+        let err = new Error()
+        err.message = {
+            code: 'server:responseError',
+            desc: '出现混乱'
+        }
+        throw err
     }
 })
 
 router.post('/api/course', async (ctx, next) => {
-
-    await login(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
-    if (ctx.request.body.username != ctx.body.data.srNum) {
-        console.log(`出现混乱`);
-        console.log(ctx.body);
-    }
-    console.log(ctx.request.body.username + '$$$$' + ctx.body.data.srNum)
+    await course(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
 })
 
 router.post('/api/exam', async (ctx, next) => {
-
-    await login(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
-    if (ctx.request.body.username != ctx.body.data.srNum) {
-        console.log(`出现混乱`);
-        console.log(ctx.body);
-    }
-    console.log(ctx.request.body.username + '$$$$' + ctx.body.data.srNum)
+    await exam(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
 })
 
 router.post('/api/grade', async (ctx, next) => {
     await grade(browserList[Math.floor(Math.random() * MAX_SIZE)], ctx)
-    if (ctx.request.body.username != ctx.body.data.srNum) {
-        console.log(`出现混乱`);
-        console.log(ctx.body);
-    }
-    console.log(ctx.request.body.username + '$$$$' + ctx.body.data.srNum)
 })
 app.use(async (ctx, next) => {
     await next()
-    console.log(`${ctx.URL} 返回——>>>${JSON.stringify(ctx.response.body)}`); // 打印耗费时间
+    // console.log(`${ctx.URL} 返回——>>>${JSON.stringify(ctx.response.body)}`); s// 打印耗费时间
 })
 app.use(router.routes(), router.allowedMethods())
 app.listen(3000, () => {
