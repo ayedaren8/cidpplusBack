@@ -1,6 +1,6 @@
 const fs = require("fs");
 module.exports = function log(content, id) {
-	if (id !== 'system') {
+	if (id !== 'test') {
 		return
 	}
 	let text = new Date() + "[log]--" + content + '\n'
